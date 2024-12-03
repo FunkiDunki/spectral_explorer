@@ -13,6 +13,7 @@ authors = [
 license = { text = "MIT" }
 dependencies = [
   "openai",
+  "pillow",
 ]
 requires-python = ">=3.7"
 classifiers = [
