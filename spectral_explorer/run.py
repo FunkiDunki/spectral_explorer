@@ -1,7 +1,22 @@
-from .configs import DEFAULT_RUNTIME_CONFIG
 import os
 import pickle
 from devtools import pprint
+from openai import OpenAI
+
+
+from .configs import DEFAULT_RUNTIME_CONFIG
+from .utils import (
+    World,
+    Player,
+    generate_main_history,
+    generate_cities,
+    generate_regions,
+    place_player_region,
+    place_player_subregion,
+    explore_subregion,
+    help_player_move
+)
+
 
 class SpectralRuntime():
     def __init__(self, config: dict = {}):
@@ -11,13 +26,17 @@ class SpectralRuntime():
         Arguments:
             -config: Optional Configuration for the runtime
         '''
-        #override the default config with any provided configuration
+        #override the default config with any provided configuration (if any)
         self.config = {**DEFAULT_RUNTIME_CONFIG, **config}
+
+        #create the client:
+        self.client = OpenAI(base_url=self.config['url'], api_key=self.config['api-key'])
+        self.model = self.config['model']
     
     def load_world(self, filename: str=None):
         pass
 
-    def run(story_prompt: str, verbose: bool, load_level: int, load_file: str):
+    def run(self, story_prompt: str, verbose: bool, load_level: int, load_file: str):
         world = World(
             history="",
             regions=[],
@@ -32,10 +51,11 @@ class SpectralRuntime():
                 world_save = pickle.load(file)
             world_save: World
             world.history= world_save.history
+            world.next_id = world_save.next_id
         else:
             print("no save found, starting from scratch.")
             world_save = None
-            world.history = generate_main_history(story_prompt)
+            world.history = generate_main_history(story_prompt=story_prompt, model=self.model, client=self.client)
             if verbose:
                 #lets try to print that out:
                 pprint(f"Story: {world.history}")
@@ -53,7 +73,11 @@ class SpectralRuntime():
 
         else:
             print("Generating regions...")
-            world = generate_regions(world)
+            world = generate_regions(
+                world=world,
+                model=self.model,
+                client=self.client
+            )
         
         if load_level >= 0:
             #save the world
@@ -63,7 +87,11 @@ class SpectralRuntime():
         
         world = place_player_region(world)
 
-        world = generate_cities(world)
+        world = generate_cities(
+            world=world,
+            model=self.model,
+            client=self.client
+        )
 
         world = place_player_subregion(world)
 
@@ -73,5 +101,13 @@ class SpectralRuntime():
                 with open(load_file, 'wb') as file:
                     pickle.dump(world, file)
                 print(f"Saved world into file: {load_file}.")
-            world = explore_subregion(world)
-            world = help_player_move(world)
+            world = explore_subregion(
+                world=world,
+                model=self.config['model'],
+                client=self.client
+            )
+            world = help_player_move(
+                world=world,
+                model=self.model,
+                client=self.client
+            )
