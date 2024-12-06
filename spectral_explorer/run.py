@@ -16,6 +16,9 @@ from .utils import (
     explore_subregion,
     help_player_move
 )
+from .gui import (
+    TextAdventureGameGUI as FrontendClient
+)
 
 
 class SpectralRuntime():
@@ -32,6 +35,26 @@ class SpectralRuntime():
         #create the client:
         self.client = OpenAI(base_url=self.config['url'], api_key=self.config['api-key'])
         self.model = self.config['model']
+
+        #frontend connection:
+        self.frontend = FrontendClient()
+        self.user_input = None
+        self.input_received = threading.Event()
+    
+    def get_input_from_frontend(self, prompt):
+        #Send a prompt to the frontend and wait for user input.
+        if not self.frontend:
+            raise ValueError("Frontend is not connected.")
+        self.input_received.clear()
+        self.frontend.display_message(prompt)
+        self.frontend.set_input_callback(self.handle_frontend_input)
+        self.input_received.wait()
+        return self.user_input
+
+    def handle_frontend_input(self, user_input):
+        #Handle input received from the frontend.
+        self.user_input = user_input
+        self.input_received.set()
     
     def load_world(self, filename: str=None):
         pass

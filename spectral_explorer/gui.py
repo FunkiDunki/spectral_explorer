@@ -57,26 +57,31 @@ class TextAdventureGameGUI:
         # Input Field
         self.input_field = tk.Entry(input_frame, font=("Courier", 14), fg="white", bg="black", insertbackground="white")
         self.input_field.pack(fill="x", side="left", padx=5, expand=True)
-        self.input_field.bind("<Return>", self.process_input)
 
         # Game State
         self.state = "start"
     
     def process_input(self, event):
-        """Handle player input and update the game."""
+        #Handle player input and update the game.
         action = self.input_field.get().strip()
         self.input_field.delete(0, tk.END)
 
-        # Example game logic
-        if self.state == "start" and action.lower() == "start":
-            self.text_box.insert(tk.END, "\nThe game begins! What will you do?\n")
-            self.state = "playing"
-        elif self.state == "playing":
-            self.text_box.insert(tk.END, f"\nYou chose: {action}\n")
+        # Call the backend's callback if set
+        if self.input_callback:
+            self.input_callback(action)
         else:
-            self.text_box.insert(tk.END, "\nInvalid action. Try again.\n")
-
+            self.text_box.insert(tk.END, "No backend callback set!\n")
         self.text_box.see(tk.END)  # Scroll to the latest text
+    
+    def set_input_callback(self, callback):
+        #Set the callback function to be called on user input.
+        self.input_callback = callback
+        self.input_field.bind("<Return>", self.process_input)
+    
+    def display_message(self, message):
+        #Display a message in the text box.
+        self.text_box.insert(tk.END, f"{message}\n")
+        self.text_box.see(tk.END)
 
     def open_notes(self):
         """Open a new window for writing notes."""
