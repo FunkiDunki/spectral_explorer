@@ -82,6 +82,7 @@ class TextAdventureGameGUI:
         #Display a message in the text box.
         self.text_box.insert(tk.END, f"{message}\n")
         self.text_box.see(tk.END)
+        self.root.update()  # Ensure the GUI updates immediately
 
     def open_notes(self):
         """Open a new window for writing notes."""
@@ -111,8 +112,6 @@ class TextAdventureGameGUI:
                 notes_content = file.read()
                 notes_text.insert(tk.END, notes_content)
 
-
-
     def save_notes(self, notes_widget):
         """Save notes to a file."""
         notes_content = notes_widget.get("1.0", tk.END).strip()
@@ -120,22 +119,4 @@ class TextAdventureGameGUI:
             file.write(notes_content)
         self.text_box.insert(tk.END, "\nNotes saved successfully!\n")
         self.text_box.see(tk.END)
-
-    def get_user_input(self, event):
-        action = self.input_field.get().strip()
-        self.input_field.delete(0, tk.END)
-        return action
-
-    def display_text(self, text="ey bruh"):
-        formated_text = f"\n{text}\n"
-        self.text_box.insert(tk.END, formated_text)
-
-
-# start frontend function
-def start_frontend():
-    root = tk.Tk()
-    app = TextAdventureGameGUI(root)
-    root.mainloop()
-
-if __name__ == "__main__":
-    start_frontend()
+        
