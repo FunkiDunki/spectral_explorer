@@ -328,10 +328,10 @@ def help_player_move(world: World, model:str, client:OpenAI, print_output, get_i
             print_output("Sorry, that's not a valid choice! ")
     
     if selection == 'subregion':
-        world = place_player_subregion(world)
+        world = place_player_subregion(world, print_output, get_input)
     elif selection == 'region':
-        world = place_player_region(world)
+        world = place_player_region(world, print_output, get_input)
         world = generate_cities(world, model, client)
-        world = place_player_subregion(world)
+        world = place_player_subregion(world, print_output, get_input)
     
     return world
