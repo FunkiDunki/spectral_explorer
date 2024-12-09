@@ -4,9 +4,9 @@ from PIL import Image, ImageTk
 import os
 
 class TextAdventureGameGUI:
-    def __init__(self, root):
+    def __init__(self, root, config: dict = {}):
         self.root = root
-        self.root.title("Text Adventure Game")
+        self.root.title("Spectral Explorer")
         self.root.geometry("1000x800")
         
         # Main Frame to hold all widgets

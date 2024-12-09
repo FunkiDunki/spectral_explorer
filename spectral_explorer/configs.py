@@ -4,3 +4,8 @@ DEFAULT_RUNTIME_CONFIG= {
     'api-key': 'lm-studio',
     'model': 'mistral-nemo-instruct-2407'
 }
+
+
+DEFAULT_FRONTENT_CONFIG= {
+    'image': None,
+}
