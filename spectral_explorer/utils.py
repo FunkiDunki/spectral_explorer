@@ -2,6 +2,7 @@ from openai import OpenAI
 from typing import List, Type, Dict
 from pydantic import BaseModel, Field
 
+
 def call_llm_unstructured(client: OpenAI, model: str, messages: List, temperature=0.8) -> str:
     '''
     Make api call to llm, for basic string
@@ -184,19 +185,19 @@ def generate_cities(world: World, model:str, client:OpenAI) -> World:
     
     return world
 
-def place_player_region(world: World) -> World:
+def place_player_region(world: World, print_output, get_input) -> World:
     '''place the player into a region of their choosing to explore'''
-    print(f"In this world, there are {len(world.regions)} main regions:")
+    print_output(f"In this world, there are {len(world.regions)} main regions:")
     for i, region in enumerate(world.regions):
-        print(f"\t({i+1}). {world.all_nodes[region].node_name}")
+        print_output(f"\t({i+1}). {world.all_nodes[region].node_name}")
     
-    choice = input("Pick the number of a region to explore!: ")
+    choice = get_input("Pick the number of a region to explore!: ")
     while not (choice.isnumeric() and int(choice) >= 1 and int(choice) <= len(world.regions)):
-        print("Whoops, that wasn't a valid choice!")
-        choice = input("Pick the number of a region to explore!: ")
+        print_output("Whoops, that wasn't a valid choice!")
+        choice = get_input("Pick the number of a region to explore!: ")
     
     choice = int(choice) - 1
-    print(f"Okay! Let's explore {world.all_nodes[world.regions[choice]].node_name}!")
+    print_output(f"Okay! Let's explore {world.all_nodes[world.regions[choice]].node_name}!")
 
     world.player.region_id = world.regions[choice]
 
@@ -249,30 +250,30 @@ def get_relevant_information(world: World, exclusions: List[str] = []) -> List[d
 
     return result
 
-def place_player_subregion(world: World) -> World:
+def place_player_subregion(world: World, print_output, get_input) -> World:
     '''place the player into a subregion of their choosing to explore'''
     #find the player's region:
     
     region = world.all_nodes[world.player.region_id]
 
-    print(f"In this region, there are {len(region.children)} subregions:")
+    print_output(f"In this region, there are {len(region.children)} subregions:")
     for i, subregion in enumerate(region.children):
-        print(f"\t({i+1}). {world.all_nodes[subregion].node_name}")
+        print_output(f"\t({i+1}). {world.all_nodes[subregion].node_name}")
     
-    choice = input("Pick the number of a subregion to explore!: ")
+    choice = get_input("Pick the number of a subregion to explore!: ")
     while not (choice.isnumeric() and int(choice) >= 1 and int(choice) <= len(region.children)):
-        print("Whoops, that wasn't a valid choice!")
-        choice = input("Pick the number of a subregion to explore!: ")
+        print_output("Whoops, that wasn't a valid choice!")
+        choice = get_input("Pick the number of a subregion to explore!: ")
     
     choice = int(choice) -1
 
-    print(f"Okay! Let's explore {world.all_nodes[region.children[choice]].node_name}!")
+    print_output(f"Okay! Let's explore {world.all_nodes[region.children[choice]].node_name}!")
 
     world.player.subregion_id = region.children[choice]
 
     return world
 
-def explore_subregion(world: World, model:str, client:OpenAI) -> World:
+def explore_subregion(world: World, model:str, client:OpenAI, print_output, get_input) -> World:
     '''explore a subregion (looping behavior). Return when the player wants to move'''
 
     subregion = world.all_nodes[
@@ -295,42 +296,42 @@ def explore_subregion(world: World, model:str, client:OpenAI) -> World:
         *relevant_info,
         {"role": "user", "content": intro_prompt}
     ]
-    print(('* ' * 10) + f"{world.all_nodes[world.player.subregion_id].node_name}" + (' *' * 10))
+    print_output(('* ' * 10) + f"{world.all_nodes[world.player.subregion_id].node_name}" + (' *' * 10))
 
     choice = ""
     while choice.lower() != "move":
         result = call_llm_unstructured(client=client, model=model, messages=messages)
-        print(result)
+        print_output(result)
         messages.append(
             {"role": "assistant", "content": result}
         )
-        choice = input("\nHow do you explore? 'move' to move to another region.\n>>> ")
+        choice = get_input("\nHow do you explore? 'move' to move to another region.\n>>> ")
         messages.append(
             {"role": "user", "content": f"The player said: {choice}"}
         )
 
-    print(('* ' * 10) + f"left {world.all_nodes[world.player.subregion_id].node_name}" + (' *' * 10))
+    print_output(('* ' * 10) + f"left {world.all_nodes[world.player.subregion_id].node_name}" + (' *' * 10))
     return world
 
-def help_player_move(world: World, model:str, client:OpenAI) -> World:
+def help_player_move(world: World, model:str, client:OpenAI, print_output, get_input) -> World:
     '''the player wants to move. find out where, and move them!'''
 
     selection = None
     while selection is None:
-        choice = input(f"Would you like to move to another subregion in {world.all_nodes[world.player.region_id].node_name}, or would you like to change regions?\n('region' or 'subregion') >>> ")
+        choice = get_input(f"Would you like to move to another subregion in {world.all_nodes[world.player.region_id].node_name}, or would you like to change regions?\n('region' or 'subregion') >>> ")
         choice = choice.lower()
         if choice == 'region':
             selection = 'region'
         elif choice == 'subregion':
             selection = 'subregion'
         else:
-            print("Sorry, that's not a valid choice! ")
+            print_output("Sorry, that's not a valid choice! ")
     
     if selection == 'subregion':
-        world = place_player_subregion(world)
+        world = place_player_subregion(world, print_output, get_input)
     elif selection == 'region':
-        world = place_player_region(world)
+        world = place_player_region(world, print_output, get_input)
         world = generate_cities(world, model, client)
-        world = place_player_subregion(world)
+        world = place_player_subregion(world, print_output, get_input)
     
     return world
