@@ -75,11 +75,14 @@ Spectral Explorer demonstrates the potential for AI to go beyond entertainment a
 
 ## Future Works
 
-- **State consistency:**
+- **State consistency**
     This project did not address the issue of maintaining changes to the environment over time or over multiple locations. 
 
 - **Objectives and termination conditions**
     There is currently no way to win or lose in this program and there is no clear objective.
+
+- **Visuals**
+    To further build off the use of AI to generate a text-based game, one could use the text of the game to generate AI images to act as the background of the current subregion/region.
 
 ---
 
