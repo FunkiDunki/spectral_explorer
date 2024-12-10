@@ -26,17 +26,20 @@ def update_schema(input_model: Type[BaseModel]) -> Dict[str, any]:
         "json_schema": {
             "name": "test_schema",
             "strict": True,
-            "schema": tmp
+            "schema": tmp,
         }
     }
 
-def call_llm_structured(client: OpenAI, model: str, messages: List, model_format: Type[BaseModel], temperature=0.8):
+def call_llm_structured(client: OpenAI, model: str, messages: List, model_format: Type[BaseModel], temperature=0.8, update_schema: bool = False):
     '''
     Make api call to create an object with specified format, as a response from llm.
     '''
 
     #first get the schema for the model:
-    schema = update_schema(model_format)
+    if update_schema:
+        schema = update_schema(model_format)
+    else:
+        schema = model_format
 
     response = client.beta.chat.completions.parse(
         model=model,
@@ -106,7 +109,7 @@ def generate_main_history(story_prompt: str, model: str, client: OpenAI) -> str:
 
     return call_llm_unstructured(client=client, model=model, messages=messages) 
 
-def generate_regions(world: World, model:str, client:OpenAI) -> World:
+def generate_regions(world: World, model:str, client:OpenAI, update_schema: bool = False) -> World:
 
     prompt = (
         "For the following world, describe 2-6 overall regions that exist. "
@@ -124,7 +127,8 @@ def generate_regions(world: World, model:str, client:OpenAI) -> World:
         client=client,
         model=model, 
         messages=messages,
-        model_format=RegionGenerateResponse
+        model_format=RegionGenerateResponse,
+        update_schema=update_schema
         ) 
 
     for region in result.regions:
@@ -143,7 +147,7 @@ def generate_regions(world: World, model:str, client:OpenAI) -> World:
     
     return world
 
-def generate_cities(world: World, model:str, client:OpenAI) -> World:
+def generate_cities(world: World, model:str, client:OpenAI, update_schema: bool = False) -> World:
     '''
     Assuming the player has just entered a new region, generate the cities for that region (if they don't exist)
     '''
@@ -167,7 +171,7 @@ def generate_cities(world: World, model:str, client:OpenAI) -> World:
         *info,
     ]
 
-    result: SubRegionGenerateResponse = call_llm_structured(client, model, messages, SubRegionGenerateResponse) 
+    result: SubRegionGenerateResponse = call_llm_structured(client, model, messages, SubRegionGenerateResponse, update_schema=update_schema) 
 
     for city in result.subregions:
         world.all_nodes[world.player.region_id].children.append(world.next_id)
@@ -313,7 +317,7 @@ def explore_subregion(world: World, model:str, client:OpenAI, print_output, get_
     print_output(('* ' * 10) + f"left {world.all_nodes[world.player.subregion_id].node_name}" + (' *' * 10))
     return world
 
-def help_player_move(world: World, model:str, client:OpenAI, print_output, get_input) -> World:
+def help_player_move(world: World, model:str, client:OpenAI, print_output, get_input, update_schema: bool =False) -> World:
     '''the player wants to move. find out where, and move them!'''
 
     selection = None
@@ -331,7 +335,7 @@ def help_player_move(world: World, model:str, client:OpenAI, print_output, get_i
         world = place_player_subregion(world, print_output, get_input)
     elif selection == 'region':
         world = place_player_region(world, print_output, get_input)
-        world = generate_cities(world, model, client)
+        world = generate_cities(world, model, client, update_schema=update_schema)
         world = place_player_subregion(world, print_output, get_input)
     
     return world

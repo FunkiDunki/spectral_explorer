@@ -11,6 +11,9 @@ class Frontend:
 
 
 class SkimmedFrontend(Frontend):
+    '''
+    A minimal frontend that allows the runtime to use cli as I/O
+    '''
     def __init__(self, config: dict = {}):
         pass
     def display_message(self, message: str):
@@ -21,6 +24,9 @@ class SkimmedFrontend(Frontend):
 
 
 class TextAdventureGameGUI(Frontend):
+    '''
+    A tkinter gui frontend to create a standalone application.
+    '''
     def __init__(self, root: tk.Tk, config: dict):
         self.config = config
         self.root = root

@@ -1,5 +1,4 @@
 import sys
-import threading
 sys.path.append("..")
 sys.path.append(".")
 from spectral_explorer.run import SpectralRuntime
@@ -10,7 +9,7 @@ import os
 #get our api key for open-ai
 dotenv.load_dotenv()
 
-#create the runtime
+#create the runtime, to connect with openai
 runtime = SpectralRuntime(
     {
         'model': 'gpt-4o-mini',
