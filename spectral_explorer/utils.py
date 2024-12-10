@@ -4,10 +4,13 @@ It manages game flow, user interactions, and progression through various scenari
 '''
 
 from openai import OpenAI
-from typing import List, Type, Dict
+from typing import List, Type, Dict, Final
 from pydantic import BaseModel, Field
 
-def call_llm_unstructured(client: OpenAI, model: str, messages: List, temperature=0.8) -> str:
+TEMPERATURE: Final = 0.8
+FORMAT_SPACING: Final = 10
+
+def call_llm_unstructured(client: OpenAI, model: str, messages: List, temperature=TEMPERATURE) -> str:
     '''
     Make api call to llm, for basic string
     '''
@@ -36,7 +39,7 @@ def update_schema(input_model: Type[BaseModel]) -> Dict[str, any]:
         }
     }
 
-def call_llm_structured(client: OpenAI, model: str, messages: List, model_format: Type[BaseModel], temperature=0.8, update_schema: bool = False):
+def call_llm_structured(client: OpenAI, model: str, messages: List, model_format: Type[BaseModel], temperature=TEMPERATURE, update_schema: bool = False):
     '''
     Make api call to create an object with specified format, as a response from llm.
     '''
@@ -392,7 +395,7 @@ def explore_subregion(world: World, model: str, client: OpenAI, print_output, ge
     ]
 
     # Display the name of the subregion.
-    print_output(('* ' * 10) + f"{subregion.node_name}" + (' *' * 10))
+    print_output(('* ' * FORMAT_SPACING) + f"{subregion.node_name}" + (' *' * FORMAT_SPACING))
 
     # Loop until the player decides to move.
     while True:
@@ -408,7 +411,7 @@ def explore_subregion(world: World, model: str, client: OpenAI, print_output, ge
         if choice == "move":
             break  # Exit the loop if the player wants to move.
 
-    print_output(('* ' * 10) + f"left {subregion.node_name}" + (' *' * 10))
+    print_output(('* ' * FORMAT_SPACING) + f"left {subregion.node_name}" + (' *' * FORMAT_SPACING))
     return world
 
 
