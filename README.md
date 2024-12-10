@@ -162,11 +162,14 @@ When creating a SpectralRuntime() object, the config will default to these value
 
 ## Future Works
 
-- **State consistency:**
+- **State consistency**
     This project did not address the issue of maintaining changes to the environment over time or over multiple locations. 
 
 - **Objectives and termination conditions:**
     There is currently no way to win or lose in this program and there is no clear objective.
+
+- **Visuals**
+    To further build off the use of AI to generate a text-based game, one could use the text of the game to generate AI images to act as the background of the current subregion/region.
 
 ---
 
@@ -185,6 +188,6 @@ When creating a SpectralRuntime() object, the config will default to these value
 
 - **[Nicholas Perlich]**  
   - Role: Frontend Developer  
-  - Contributions: Created a frontend for a better user experience
-  - Contact: [nicholasperlich2003@gmail.com] | [GitHub Profile](https://github.com/FunkiDunki)
+  - Contributions: Created a frontend for a better user experience and created a cohesive format to code structure and display for clear understanding and ease of adding to the code base
+  - Contact: [nicholasperlich2003@gmail.com] | [GitHub Profile](https://github.com/NickPerlich)
 ---
