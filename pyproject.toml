@@ -14,8 +14,9 @@ authors = [
 ]
 license = { text = "MIT" }
 dependencies = [
-  "openai",
-  "pillow",
+  "openai>=0.27.0",
+  "pillow>=9.0.0",
+  "devtools>=0.8.2"
 ]
 requires-python = ">=3.7"
 classifiers = [
@@ -25,7 +26,7 @@ classifiers = [
 ]
 
 [tool.hatch.build.targets.sdist]
-include = ["examples/**/*", "spectral_explorer/**/*"]
+include = ["spectral_explorer/**/*"]
 
 [tool.hatch.build.targets.wheel]
-include = ["examples/**/*", "spectral_explorer/**/*"]
+include = ["spectral_explorer/**/*"]
