@@ -5,8 +5,8 @@ sys.path.append(".")
 from spectral_explorer.run import SpectralRuntime
 import os
 
-
-
+#load the background image into background_image_path to be used for the gui
+#alternatively, an animation can be used instead of a background image
 current_dir = os.path.dirname(os.path.abspath(__file__))
 relative_path_to_image = "images/background.png"
 background_image_path = os.path.join(current_dir, relative_path_to_image)
