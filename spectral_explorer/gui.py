@@ -16,15 +16,15 @@ class Frontend:
     def display_message(self, message: str):
         '''
         Display a message to the user.
-        Args: message: The message to display.
-
+        Args: 
+            message: The message to display.
         '''
         raise NotImplementedError("Abstract method")
     def set_input_callback(self, callback):
         '''
         Set a callback function to handle user input.
-        Args: callback: A function to process user input.
-
+        Args: 
+            callback: A function to process user input.
         '''
         raise NotImplementedError("Abstract method")
 
@@ -32,6 +32,8 @@ class Frontend:
 class SkimmedFrontend(Frontend):
     '''
     A minimal frontend that allows the runtime to use cli as I/O
+    Args:
+        config (dict): A dictionary containing configuration options for the frontend
     '''
     def __init__(self, config: dict = {}):
         pass
@@ -47,6 +49,14 @@ class TextAdventureGameGUI(Frontend):
     A tkinter gui frontend to create a standalone application.
     '''
     def __init__(self, root: tk.Tk, config: dict):
+        '''
+        Initializes the TextAdventureGameGUI class.
+        Args:
+            root (tk.Tk): The main tkinter root window for the GUI application. 
+                          It serves as the parent container for all widgets.
+
+            config (dict): A dictionary containing configuration options for the GUI
+        '''
         self.config = config
         self.root = root
 
@@ -120,6 +130,8 @@ class TextAdventureGameGUI(Frontend):
     def set_input_callback(self, callback):
         '''
         Set the callback function to be called on user input.
+        Arguments:
+            callback: A callback function to be called on user input.
         '''
         self.input_callback = callback
         self.input_field.bind("<Return>", self.process_input)
@@ -127,6 +139,8 @@ class TextAdventureGameGUI(Frontend):
     def display_message(self, message):
         '''
         Display a message in the text box.
+        Arguments:
+            message: a message to display in the text box
         '''
         self.text_box.insert(tk.END, f"{message}\n")
         self.text_box.see(tk.END)
@@ -162,11 +176,13 @@ class TextAdventureGameGUI(Frontend):
                 notes_content = file.read()
                 notes_text.insert(tk.END, notes_content)
 
-    def save_notes(self, notes_widget):
+    def save_notes(self, notes_text):
         '''
         Save notes to a file.
+        Arguments:
+            notes_text: text to be displayed in the notes window when opened
         '''
-        notes_content = notes_widget.get("1.0", tk.END).strip()
+        notes_content = notes_text.get("1.0", tk.END).strip()
         with open(self.config['notes-location'], "w") as file:
             file.write(notes_content)
         self.text_box.insert(tk.END, "\nNotes saved successfully!\n")
