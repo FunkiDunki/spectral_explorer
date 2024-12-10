@@ -1,18 +1,43 @@
+'''
+Purpose: This file defines a few options for a frontend interface for user interaction with a text-based adventure game.
+'''
+
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from PIL import Image, ImageTk
 import os
 
 class Frontend:
+    '''
+    Abstract base class for frontend interfaces.
+
+    This class defines a blueprint for frontend components that handle:
+    - Displaying text to the user
+    - Handling user input via a callback function
+
+    Subclasses must implement both methods to provide concrete functionality.
+    '''
     def display_message(self, message: str):
+        '''
+        Display a message to the user.
+        Args: 
+            message: The message to display.
+        '''
         raise NotImplementedError("Abstract method")
     def set_input_callback(self, callback):
+        '''
+        Set a callback function to handle user input.
+        Args: 
+            callback: A function to process user input.
+        '''
         raise NotImplementedError("Abstract method")
 
 
 class SkimmedFrontend(Frontend):
     '''
     A minimal frontend that allows the runtime to use cli as I/O
+    Args:
+        config (dict): A dictionary containing configuration options for the frontend
     '''
     def __init__(self, config: dict = {}):
         pass
@@ -28,6 +53,14 @@ class TextAdventureGameGUI(Frontend):
     A tkinter gui frontend to create a standalone application.
     '''
     def __init__(self, root: tk.Tk, config: dict):
+        '''
+        Initializes the TextAdventureGameGUI class.
+        Args:
+            root (tk.Tk): The main tkinter root window for the GUI application. 
+                          It serves as the parent container for all widgets.
+
+            config (dict): A dictionary containing configuration options for the GUI
+        '''
         self.config = config
         self.root = root
 
@@ -85,7 +118,9 @@ class TextAdventureGameGUI(Frontend):
         self.state = "start"
     
     def process_input(self, event):
-        #Handle player input and update the game.
+        '''
+        Handle player input and update the game.
+        '''
         action = self.input_field.get().strip()
         self.input_field.delete(0, tk.END)
 
@@ -97,18 +132,28 @@ class TextAdventureGameGUI(Frontend):
         self.text_box.see(tk.END)  # Scroll to the latest text
     
     def set_input_callback(self, callback):
-        #Set the callback function to be called on user input.
+        '''
+        Set the callback function to be called on user input.
+        Arguments:
+            callback: A callback function to be called on user input.
+        '''
         self.input_callback = callback
         self.input_field.bind("<Return>", self.process_input)
     
     def display_message(self, message):
-        #Display a message in the text box.
+        '''
+        Display a message in the text box.
+        Arguments:
+            message: a message to display in the text box
+        '''
         self.text_box.insert(tk.END, f"{message}\n")
         self.text_box.see(tk.END)
         self.root.update()  # Ensure the GUI updates immediately
 
     def open_notes(self):
-        """Open a new window for writing notes."""
+        '''
+        Open a new window for writing notes.
+        '''
         notes_window = tk.Toplevel(self.root)
         notes_window.title("Notes")
         notes_window.geometry("600x400")
@@ -135,11 +180,18 @@ class TextAdventureGameGUI(Frontend):
                 notes_content = file.read()
                 notes_text.insert(tk.END, notes_content)
 
-    def save_notes(self, notes_widget):
-        """Save notes to a file."""
-        notes_content = notes_widget.get("1.0", tk.END).strip()
+    def save_notes(self, notes_text):
+        '''
+        Save notes to a file.
+        Arguments:
+            notes_text: text to be displayed in the notes window when opened
+        '''
+        # Parse notes_text to extract its content in a writable form
+        notes_content = notes_text.get("1.0", tk.END).strip()
+        # Write notes_content to saved notes file
         with open(self.config['notes-location'], "w") as file:
             file.write(notes_content)
+        # Write a message to frontend that notes have been saved
         self.text_box.insert(tk.END, "\nNotes saved successfully!\n")
         self.text_box.see(tk.END)
         
