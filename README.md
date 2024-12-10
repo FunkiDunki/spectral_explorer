@@ -48,7 +48,7 @@ Spectral Explorer demonstrates the potential for AI to go beyond entertainment a
 ## Usage
 
 - **Example Workflow Using Terminal:**
-  1. python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer 
+  1. python3 -m pip install spectral-explorer
   2. pip install openai 
   3. pip install pillow
   4. pip install devtools
@@ -77,7 +77,7 @@ Spectral Explorer demonstrates the potential for AI to go beyond entertainment a
   ```
 
 - **Example Workflow Using OpenAI API key:**
-  1. python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
+  1. python3 -m pip install spectral-explorer
   2. pip install openai
   3. pip install pillow
   4. pip install devtools
@@ -107,7 +107,7 @@ Spectral Explorer demonstrates the potential for AI to go beyond entertainment a
   ```
 
 - **Example Workflow with Frontend:**
-  1. python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
+  1. python3 -m pip install spectral-explorer
   2. pip install openai
   3. pip install pillow
   4. pip install devtools
