@@ -4,9 +4,28 @@ from PIL import Image, ImageTk
 import os
 
 class Frontend:
+    '''
+    Abstract base class for frontend interfaces.
+
+    This class defines a blueprint for frontend components that handle:
+    - Displaying text to the user
+    - Handling user input via a callback function
+
+    Subclasses must implement both methods to provide concrete functionality.
+    '''
     def display_message(self, message: str):
+        '''
+        Display a message to the user.
+        Args: message: The message to display.
+
+        '''
         raise NotImplementedError("Abstract method")
     def set_input_callback(self, callback):
+        '''
+        Set a callback function to handle user input.
+        Args: callback: A function to process user input.
+
+        '''
         raise NotImplementedError("Abstract method")
 
 
@@ -85,7 +104,9 @@ class TextAdventureGameGUI(Frontend):
         self.state = "start"
     
     def process_input(self, event):
-        #Handle player input and update the game.
+        '''
+        Handle player input and update the game.
+        '''
         action = self.input_field.get().strip()
         self.input_field.delete(0, tk.END)
 
@@ -97,18 +118,24 @@ class TextAdventureGameGUI(Frontend):
         self.text_box.see(tk.END)  # Scroll to the latest text
     
     def set_input_callback(self, callback):
-        #Set the callback function to be called on user input.
+        '''
+        Set the callback function to be called on user input.
+        '''
         self.input_callback = callback
         self.input_field.bind("<Return>", self.process_input)
     
     def display_message(self, message):
-        #Display a message in the text box.
+        '''
+        Display a message in the text box.
+        '''
         self.text_box.insert(tk.END, f"{message}\n")
         self.text_box.see(tk.END)
         self.root.update()  # Ensure the GUI updates immediately
 
     def open_notes(self):
-        """Open a new window for writing notes."""
+        '''
+        Open a new window for writing notes.
+        '''
         notes_window = tk.Toplevel(self.root)
         notes_window.title("Notes")
         notes_window.geometry("600x400")
@@ -136,7 +163,9 @@ class TextAdventureGameGUI(Frontend):
                 notes_text.insert(tk.END, notes_content)
 
     def save_notes(self, notes_widget):
-        """Save notes to a file."""
+        '''
+        Save notes to a file.
+        '''
         notes_content = notes_widget.get("1.0", tk.END).strip()
         with open(self.config['notes-location'], "w") as file:
             file.write(notes_content)
