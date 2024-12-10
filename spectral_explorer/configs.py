@@ -1,9 +1,9 @@
 DEFAULT_RUNTIME_CONFIG= {
     'output_dir': './saves',
-    'url': 'http://localhost:1234/v1/',
+    'url': None,
     'api-key': 'lm-studio',
     'model': 'mistral-nemo-instruct-2407',
-    'frontend-active': False 
+    'frontend-active':False 
 }
 
 DEFAULT_FRONTEND_CONFIG = {
