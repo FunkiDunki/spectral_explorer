@@ -15,7 +15,8 @@ background_image_path = os.path.join(current_dir, relative_path_to_image)
 runtime = SpectralRuntime(
     {
         'model': "llama-3.2-1b-instruct",
-        "frontend-active": True
+        "frontend-active": True,
+        'url': 'http://localhost:1234/v1/',
     },
     frontend_config={
         'image-location': background_image_path,

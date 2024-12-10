@@ -8,11 +8,13 @@ import os
 
 
 #get our api key for open-ai
+dotenv.load_dotenv()
 
 #create the runtime
 runtime = SpectralRuntime(
     {
-        'model': "llama-3.2-1b-instruct",
+        'model': 'gpt-4o-mini',
+        'api-key': os.getenv("OPENAI_KEY")
     }
 )
 
