@@ -3,27 +3,44 @@ from tkinter.scrolledtext import ScrolledText
 from PIL import Image, ImageTk
 import os
 
-class TextAdventureGameGUI:
-    def __init__(self, root, config: dict = {}):
+class Frontend:
+    def display_message(self, message: str):
+        raise NotImplementedError("Abstract method")
+    def set_input_callback(self, callback):
+        raise NotImplementedError("Abstract method")
+
+
+class SkimmedFrontend(Frontend):
+    def __init__(self, config: dict = {}):
+        pass
+    def display_message(self, message: str):
+        print(message)
+    def set_input_callback(self, callback):
+        choice = input("")
+        callback(choice)
+
+
+class TextAdventureGameGUI(Frontend):
+    def __init__(self, root: tk.Tk, config: dict):
+        self.config = config
         self.root = root
-        self.root.title("Spectral Explorer")
-        self.root.geometry("1000x800")
+
+        self.root.title(self.config['title'])
+        self.root.geometry(self.config['size'])
         
         # Main Frame to hold all widgets
         main_frame = tk.Frame(root)
         main_frame.pack(fill="both", expand=True)
 
         # Background Canvas
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        relative_path_to_image = "images/background.png"
-        background_image_path = os.path.join(current_dir, relative_path_to_image)
+        self.canvas = tk.Canvas(main_frame, width=800, height=100)
+        self.canvas.pack(fill="x")
 
-        bg_image = Image.open(background_image_path).resize((1000, 600))  # Resize to fit the window
-        self.bg_photo = ImageTk.PhotoImage(bg_image)
+        if self.config['show-image']:
+            bg_image = Image.open(self.config['image-location']).resize((1000, 600))  # Resize to fit the window
+            self.bg_photo = ImageTk.PhotoImage(bg_image)
 
-        self.canvas = tk.Canvas(main_frame, width=800, height=500)
-        self.canvas.pack(fill="both", expand=True)
-        self.canvas.create_image(0, 0, anchor=tk.NW, image=self.bg_photo)
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=self.bg_photo)
 
         # Add the Notes Button on the Canvas
         self.notes_button = tk.Button(
@@ -38,12 +55,12 @@ class TextAdventureGameGUI:
         self.notes_button_window = self.canvas.create_window(100, 20, anchor=tk.NE, window=self.notes_button)
 
         # Frame for Text Box and Input Field
-        bottom_frame = tk.Frame(main_frame, bg="black")
-        bottom_frame.pack(fill="x", side="bottom")
+        bottom_frame = tk.Frame(main_frame, bg="gray")
+        bottom_frame.pack(fill="both", side="bottom", expand=True)
 
         # Text Box for Game Output
         self.text_box = ScrolledText(bottom_frame, wrap=tk.WORD, height=12, font=("Courier", 14), bg="black", fg="white")
-        self.text_box.pack(fill="x", side="top")
+        self.text_box.pack(fill="both", side="top", expand=True)
         self.text_box.insert(tk.END, "Welcome to the Adventure Game! Type 'start' to begin.\n")
 
          # Frame for Input Field with Prompt Marker
@@ -107,15 +124,15 @@ class TextAdventureGameGUI:
         save_button.pack(side="right")
 
         # Load existing notes if available
-        if os.path.exists("notes.txt"):
-            with open("notes.txt", "r") as file:
+        if os.path.exists(self.config['notes-location']):
+            with open(self.config["notes-location"], "r") as file:
                 notes_content = file.read()
                 notes_text.insert(tk.END, notes_content)
 
     def save_notes(self, notes_widget):
         """Save notes to a file."""
         notes_content = notes_widget.get("1.0", tk.END).strip()
-        with open("notes.txt", "w") as file:
+        with open(self.config['notes-location'], "w") as file:
             file.write(notes_content)
         self.text_box.insert(tk.END, "\nNotes saved successfully!\n")
         self.text_box.see(tk.END)
