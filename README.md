@@ -75,6 +75,6 @@ Spectral Explorer demonstrates the potential for AI to go beyond entertainment a
 
 - **[Nicholas Perlich]**  
   - Role: Frontend Developer  
-  - Contributions: Created a frontend for a better user experience
-  - Contact: [nicholasperlich2003@gmail.com] | [GitHub Profile](https://github.com/FunkiDunki)
+  - Contributions: Created a frontend for a better user experience and created a cohesive format to code structure and display for clear understanding and ease of adding to the code base
+  - Contact: [nicholasperlich2003@gmail.com] | [GitHub Profile](https://github.com/NickPerlich)
 ---
