@@ -47,7 +47,30 @@ Spectral Explorer demonstrates the potential for AI to go beyond entertainment a
 
 ## Usage
 
+- **Example Workflow with Frontend:**
+  python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
+  pip install openai
+  pip install pillow
+  pip install devtools
+  Use LM studio to run llama-3.2-1b-instruct model on http://localhost:1234/v1/
+  python -m examples.example_usage_visual.py
 
+- **Example Workflow Using Terminal:**
+  python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
+  pip install openai
+  pip install pillow
+  pip install devtools
+  Use LM studio to run llama-3.2-1b-instruct model on http://localhost:1234/v1/
+  python -m examples.example_slim_usage.py
+
+- **Example Workflow Using OpenAI API key:**
+  python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
+  pip install openai
+  pip install pillow
+  pip install devtools
+  Use your own API key as OPENAI_KEY environment variable
+  python -m examples.example_openai_usage.py
+  
 ---
 
 ## Future Works
