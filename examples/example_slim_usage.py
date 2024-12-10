@@ -13,6 +13,7 @@ runtime = SpectralRuntime(
     {
         'model': "llama-3.2-1b-instruct",
         'url': 'http://localhost:1234/v1/',
+        'update-schema': True
     }
 )
 

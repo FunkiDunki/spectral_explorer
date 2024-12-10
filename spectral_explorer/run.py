@@ -66,10 +66,9 @@ class SpectralRuntime():
         """Run the backend logic."""
         self.run(
             story_prompt=(
-                "write about the history of a magical world called akhel. "
-                "Focus on important events that might impact the world, or the citizens of it."
+                self.config['story-prompt']
             ),
-            load_file="./saves/world_akhel.pkl",
+            load_file=(self.config['output_dir']+'/'+self.config['save-name']),
             load_level=2,
             verbose=True
         )
@@ -140,7 +139,8 @@ class SpectralRuntime():
             world = generate_regions(
                 world=world,
                 model=self.model,
-                client=self.client
+                client=self.client,
+                update_schema=self.config['update-schema']
             )
         
         if load_level >= 0:
@@ -154,7 +154,8 @@ class SpectralRuntime():
         world = generate_cities(
             world=world,
             model=self.model,
-            client=self.client
+            client=self.client,
+            update_schema=self.config['update-schema']
         )
 
         world = place_player_subregion(world, self.frontend.display_message, self.get_input_from_frontend)
@@ -177,5 +178,6 @@ class SpectralRuntime():
                 model=self.model,
                 client=self.client,
                 print_output=self.frontend.display_message,
-                get_input=self.get_input_from_frontend
+                get_input=self.get_input_from_frontend,
+                update_schema=self.config['update-schema']
             )
