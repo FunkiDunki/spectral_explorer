@@ -182,9 +182,12 @@ class TextAdventureGameGUI(Frontend):
         Arguments:
             notes_text: text to be displayed in the notes window when opened
         '''
+        # Parse notes_text to extract its content in a writable form
         notes_content = notes_text.get("1.0", tk.END).strip()
+        # Write notes_content to saved notes file
         with open(self.config['notes-location'], "w") as file:
             file.write(notes_content)
+        # Write a message to frontend that notes have been saved
         self.text_box.insert(tk.END, "\nNotes saved successfully!\n")
         self.text_box.see(tk.END)
         
