@@ -17,6 +17,7 @@ runtime = SpectralRuntime(
         'model': "llama-3.2-1b-instruct",
         "frontend-active": True,
         'url': 'http://localhost:1234/v1/',
+        'update-schema': True
     },
     frontend_config={
         'image-location': background_image_path,
