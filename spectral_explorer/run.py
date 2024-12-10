@@ -5,8 +5,11 @@ import threading
 from devtools import pprint
 from openai import OpenAI
 
+import sys
+sys.path.append(".")
 
-from .configs import DEFAULT_RUNTIME_CONFIG
+
+from .configs import DEFAULT_RUNTIME_CONFIG, DEFAULT_FRONTEND_CONFIG
 from .utils import (
     World,
     Player,
@@ -18,12 +21,15 @@ from .utils import (
     explore_subregion,
     help_player_move
 )
-from .gui import TextAdventureGameGUI as FrontendClient
+from .gui import (
+    TextAdventureGameGUI,
+    SkimmedFrontend
+)
 
 
 
 class SpectralRuntime():
-    def __init__(self, config: dict = {}):
+    def __init__(self, config: dict = {}, frontend_config: dict={}):
         '''
         Initialize the spectral explorer runtime
 
@@ -37,15 +43,24 @@ class SpectralRuntime():
         self.client = OpenAI(base_url=self.config['url'], api_key=self.config['api-key'])
         self.model = self.config['model']
 
+
         #frontend connection:
-        self.tk_root = tk.Tk()
-        self.frontend = FrontendClient(self.tk_root)
+        if self.config['frontend-active']:
+            self.tk_root = tk.Tk()
+            new_frontend_config = {**DEFAULT_FRONTEND_CONFIG, **frontend_config}
+            
+            self.frontend = TextAdventureGameGUI(self.tk_root, new_frontend_config)
+        else:
+            self.frontend= SkimmedFrontend()
+
+
         self.user_input = None
         self.input_received = threading.Event()
 
     def start_gui(self):
         #Start the GUI in the main thread.
-        self.tk_root.after(0, self.tk_root.mainloop)
+        if self.config['frontend-active']:
+            self.tk_root.after(0, self.tk_root.mainloop)
 
     def run_backend_logic(self):
         """Run the backend logic."""

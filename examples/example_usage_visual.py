@@ -1,10 +1,27 @@
 import sys
 import threading
 sys.path.append("..")
+sys.path.append(".")
 from spectral_explorer.run import SpectralRuntime
+import os
+
+
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+relative_path_to_image = "images/background.png"
+background_image_path = os.path.join(current_dir, relative_path_to_image)
 
 #create the runtime
-runtime = SpectralRuntime({'model': "llama-3.2-1b-instruct"})
+runtime = SpectralRuntime(
+    {
+        'model': "llama-3.2-1b-instruct",
+        "frontend-active": True
+    },
+    frontend_config={
+        'image-location': background_image_path,
+        'show-image': True
+    }
+)
 
 def run_backend_logic():
     """Run the backend logic in a separate thread."""
