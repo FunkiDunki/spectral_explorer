@@ -24,7 +24,7 @@ def call_llm_unstructured(client: OpenAI, model: str, messages: List, temperatur
 
     return response
 
-def update_schema(input_model: Type[BaseModel]) -> Dict[str, any]:
+def update_json_schema(input_model: Type[BaseModel]) -> Dict[str, any]:
     '''
     new update to lmstudio has stricter reqs for structured_output:
     '''
@@ -46,7 +46,7 @@ def call_llm_structured(client: OpenAI, model: str, messages: List, model_format
 
     #first get the schema for the model:
     if update_schema:
-        schema = update_schema(model_format)
+        schema = update_json_schema(model_format)
     else:
         schema = model_format
 
