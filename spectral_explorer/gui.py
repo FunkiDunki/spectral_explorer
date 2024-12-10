@@ -1,3 +1,7 @@
+'''
+Purpose: This file defines a few options for a frontend interface for user interaction with a text-based adventure game.
+'''
+
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from PIL import Image, ImageTk

@@ -1,3 +1,8 @@
+'''
+Purpose: This file contains the main logic for a text-based adventure game.  
+It manages game flow, user interactions, and progression through various scenarios. 
+'''
+
 from openai import OpenAI
 from typing import List, Type, Dict
 from pydantic import BaseModel, Field

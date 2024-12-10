@@ -1,3 +1,8 @@
+'''
+Purpose: This file defines the SpectralRuntime class, which provides the core runtime logic for a text-based adventure game.  
+It integrates backend logic, frontend GUI components, and world-building systems to manage the game's flow.
+''' 
+
 import os
 import pickle
 import tkinter as tk
