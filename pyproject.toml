@@ -9,11 +9,14 @@ description = "A package for running a text game about exploring generated world
 readme = { file = "README.md", content-type = "text/markdown" }
 authors = [
   { name = "Nicholas Hotelling", email = "nicholashotelling@gmail.com" },
+  { name = "Baylor Pond", email = "baylorpond@gmail.com" },
+  { name = "Nicholas Perlich", email = "nicholasperlich2003@gmail.com" },
 ]
 license = { text = "MIT" }
 dependencies = [
-  "openai",
-  "pillow",
+  "openai>=0.27.0",
+  "pillow>=9.0.0",
+  "devtools>=0.8.2"
 ]
 requires-python = ">=3.7"
 classifiers = [
@@ -22,5 +25,8 @@ classifiers = [
   "Operating System :: OS Independent",
 ]
 
-[project.optional-dependencies]
-dev = []
+[tool.hatch.build.targets.sdist]
+include = ["spectral_explorer/**/*"]
+
+[tool.hatch.build.targets.wheel]
+include = ["spectral_explorer/**/*"]

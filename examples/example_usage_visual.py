@@ -32,7 +32,7 @@ def run_backend_logic():
 runtime.start_gui()
 
 #begin the run
-runtime.tk_root.after(100, run_backend_logic)  # Run backend logic after 100ms (adjust as needed)
+runtime.tk_root.after(100, run_backend_logic)  # Run backend logic after 100ms
 
 # Start the Tkinter main loop (this keeps the GUI responsive)
 runtime.tk_root.mainloop()
