@@ -47,30 +47,117 @@ Spectral Explorer demonstrates the potential for AI to go beyond entertainment a
 
 ## Usage
 
-- **Example Workflow with Frontend:**
-  python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
-  pip install openai
-  pip install pillow
-  pip install devtools
-  Use LM studio to run llama-3.2-1b-instruct model on http://localhost:1234/v1/
-  python -m examples.example_usage_visual.py
-
 - **Example Workflow Using Terminal:**
-  python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
-  pip install openai
-  pip install pillow
-  pip install devtools
-  Use LM studio to run llama-3.2-1b-instruct model on http://localhost:1234/v1/
-  python -m examples.example_slim_usage.py
+  1. python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer 
+  2. pip install openai 
+  3. pip install pillow
+  4. pip install devtools
+  5. Use LM studio to run llama-3.2-1b-instruct model on http://localhost:1234/v1/
+  6. Run the following from examples/example_slim_usage.py
+  ```python
+  import sys
+  import threading
+  sys.path.append("..")
+  sys.path.append(".")
+  from spectral_explorer.run import SpectralRuntime
+  import dotenv
+  import os
+
+  # Get our API key for OpenAI
+  # Create the runtime
+  runtime = SpectralRuntime(
+      {
+          'model': "llama-3.2-1b-instruct",
+          'url': 'http://localhost:1234/v1/',
+          'update-schema': True
+      }
+  )
+
+  runtime.run_backend_logic()
+  ```
 
 - **Example Workflow Using OpenAI API key:**
-  python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
-  pip install openai
-  pip install pillow
-  pip install devtools
-  Use your own API key as OPENAI_KEY environment variable
-  python -m examples.example_openai_usage.py
+  1. python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
+  2. pip install openai
+  3. pip install pillow
+  4. pip install devtools
+  5. Add your own API key to a .env file as OPENAI_KEY
+  6. Run the following from examples/example_openai_usage.py:
+  ```python
+  import sys
+  sys.path.append("..")
+  sys.path.append(".")
+  from spectral_explorer.run import SpectralRuntime
+  import dotenv
+  import os
+
+
+  #get our api key for open-ai
+  dotenv.load_dotenv()
+
+  #create the runtime, to connect with openai
+  runtime = SpectralRuntime(
+      {
+          'model': 'gpt-4o-mini',
+          'api-key': os.getenv("OPENAI_KEY")
+      }
+  )
+
+  runtime.run_backend_logic()
+  ```
+
+- **Example Workflow with Frontend:**
+  1. python3 -m pip install --index-url https://test.pypi.org/simple/ --no-deps spectral-explorer
+  2. pip install openai
+  3. pip install pillow
+  4. pip install devtools
+  5. Use LM studio to run llama-3.2-1b-instruct model on http://localhost:1234/v1/
+  6. Run the code in examples/example_usage_visual.py
   
+---
+
+## Config
+
+The following are the defaults for runtime:
+```python
+DEFAULT_RUNTIME_CONFIG= {
+    'output_dir': './saves',
+    'url': None,
+    'api-key': 'lm-studio',
+    'model': 'mistral-nemo-instruct-2407',
+    'frontend-active':False ,
+    'save-name': '/world.pkl',
+    'story-prompt': "write about the history of a magical world called akhel. "
+                "Focus on important events that might impact the world, or the citizens of it.",
+    'update-schema': False, #set for true when using LM studio or if any schema problems arise
+}
+
+DEFAULT_FRONTEND_CONFIG = {
+    'title': 'Spectral Explorer Example',
+    'size': "1000x800",
+    'show-image': False,
+    'image-location': '',
+    'notes-location': './notes'
+}
+```
+When creating a SpectralRuntime() object, the config will default to these values, but you may overload these variables. \
+### Runtime Config:
+  - **output_dir** refers to the directory the program will save your game to. You should create your own saves folder or overload the variable with a different folder
+  - **url** defaults to openai when None
+  - **api-key** defaults to lm studio
+  - **model** defaults to our preferred model
+  - **frontend-active** defaults to not having a frontend and will use the terminal
+  - **save-name** name of save file
+  - **story-prompt** initial prompt for the model
+  - **update-schema** should be set to true if using LM studio or if any schema problems arise
+
+### Frontend Config: 
+  - **title** title of frontend window
+  - **size** size of frontend window
+  - **show-image** whether or not to show an image in the background
+  - **image-location** where the image file saved is locally
+  - **notes-location** where notes are saved locally
+
 ---
 
 ## Future Works
@@ -78,7 +165,7 @@ Spectral Explorer demonstrates the potential for AI to go beyond entertainment a
 - **State consistency:**
     This project did not address the issue of maintaining changes to the environment over time or over multiple locations. 
 
-- **Objectives and termination conditions**
+- **Objectives and termination conditions:**
     There is currently no way to win or lose in this program and there is no clear objective.
 
 ---
